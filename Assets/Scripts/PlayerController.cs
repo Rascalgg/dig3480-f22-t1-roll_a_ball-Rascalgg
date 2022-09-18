@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     void SetCountText()
     {
         countText.text = "Count: " + count.ToString();
-        if(count >= 12)
+        if(count >= 24)
         {
             winTextObject.SetActive(true);
         }
@@ -57,6 +57,17 @@ public class PlayerController : MonoBehaviour
             count = count + 1;
 
             SetCountText();
+        }
+        else if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.SetActive(false);
+            count = count - 1;
+            
+            SetCountText();
+        }
+        if (count == 12)
+        {
+            transform.position = new Vector3(-0.5f, 0.5f, 64.5f);
         }
         
     }
