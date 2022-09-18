@@ -8,10 +8,15 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 0;
     public TextMeshProUGUI countText;
+    public TextMeshProUGUI livesText;
+    public TextMeshProUGUI winText;
     public GameObject winTextObject;
+    public GameObject player;
+    
     
     private Rigidbody rb;
     private int count;
+    private int lives;
     private float movementX;
     private float movementY;
 
@@ -20,6 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         count =0;
+        lives =3;
 
         SetCountText();
         winTextObject.SetActive(false);
@@ -39,14 +45,26 @@ public class PlayerController : MonoBehaviour
         if(count >= 24)
         {
             winTextObject.SetActive(true);
+            player.SetActive(false);
         }
+        livesText.text = "Lives: " + lives.ToString();
+        if(lives <= 0)
+        {
+            winText.text = "You lost! Try Again!";
+            winTextObject.SetActive(true);
+            player.SetActive(false);
+            Destroy(this);
+            
+        }
+    
     }
-
+   
     void FixedUpdate()
     {
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
 
         rb.AddForce(movement * speed);
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -55,20 +73,23 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             count = count + 1;
+            
+            if (count == 12)
+            {
+                transform.position = new Vector3(-0.5f, 0.5f, 64.5f);
+            }
 
             SetCountText();
         }
         else if (other.gameObject.CompareTag("Enemy"))
         {
             other.gameObject.SetActive(false);
-            count = count - 1;
+            lives = lives - 1;
+
             
             SetCountText();
         }
-        if (count == 12)
-        {
-            transform.position = new Vector3(-0.5f, 0.5f, 64.5f);
-        }
+        
         
     }
 }
